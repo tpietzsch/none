@@ -1,0 +1,130 @@
+package neon.agent;
+
+import java.util.Set;
+
+import neon.annotation.Instantiate;
+
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.Method;
+import org.objectweb.asm.tree.MethodNode;
+
+/**
+ * Rewrite methods with the {@link Instantiate @Instantiate} annotation.
+ *
+ * @author Tobias Pietzsch <tobias.pietzsch@gmail.com>
+ */
+public class InstantiateTransformClassVisitor extends ClassVisitor
+{
+	/**
+	 * The methods that need to be transformed. This is set by the constructor.
+	 */
+	private final Set< Method > methodsToTransform;
+
+	private int version;
+
+	private String debug;
+
+	private String source;
+
+	private Type type;
+
+	/**
+	 * @param api
+	 *            the ASM API version implemented by this visitor. Must be one
+	 *            of {@link Opcodes#ASM4} or {@link Opcodes#ASM5}.
+	 * @param cv
+	 *            the visitor to which we will pass everything that is passed to
+	 *            us (either as is, or transformed). Usually this is a
+	 *            {@link ClassWriter}.
+	 * @param methodsToTransform
+	 *            methods that need to be transformed by this visitor.
+	 */
+	public InstantiateTransformClassVisitor( final int api, final ClassVisitor cv, final Set< Method > methodsToTransform )
+	{
+		super( api, cv );
+		this.methodsToTransform = methodsToTransform;
+	}
+
+	@Override
+	public void visit( final int version, final int access, final String name, final String signature, final String superName, final String[] interfaces )
+	{
+//		System.out.println( getClass().getSimpleName() + ".visit(" + version + ", " + access + ", " + name + ", " + signature + ", " + superName + ", " + interfaces + " )" );
+		this.version = version;
+		this.type = Type.getObjectType( name );
+		super.visit( version, access, name, signature, superName, interfaces );
+	}
+
+	@Override
+	public void visitSource( final String source, final String debug )
+	{
+//		System.out.println( getClass().getSimpleName() + ".visitSource(" + source + ", " + debug + " )" );
+		this.source = source;
+		this.debug = debug;
+		super.visitSource( source, debug );
+	}
+
+	@Override
+	public MethodVisitor visitMethod( final int access, final String name, final String desc, final String signature, final String[] exceptions )
+	{
+		/*
+		 * mv is a MethodVisitor obtained from the ClassWriter cv.
+		 *
+		 * If we would simply return it, the mv.visitCode() etc. methods would
+		 * be called, and the method would be written to the ClassWriter.
+		 */
+		final MethodVisitor mv = super.visitMethod( access, name, desc, signature, exceptions );
+
+		if ( mv != null && methodsToTransform.contains( new Method( name, desc ) ) )
+			/*
+			 * For methods annotated with @Instantiate, we return a
+			 * InstantiateMethodVisitor instead, that transforms the method and
+			 * then passes it on to mv.
+			 */
+			return new InstantiateMethodVisitor( mv, access, name, desc, signature, exceptions );
+		else
+			return mv;
+	}
+
+	/**
+	 * Running index for generated interfaces (multiple methods may need to be transformed.)
+	 */
+	private int interfaceIndex = 0;
+
+	private class InstantiateMethodVisitor extends MethodVisitor
+	{
+		private final MethodVisitor next;
+
+		public InstantiateMethodVisitor(
+				final MethodVisitor next,
+				final int access,
+				final String name,
+				final String desc,
+				final String signature,
+				final String[] exceptions )
+		{
+			super( InstantiateTransformClassVisitor.this.api, new MethodNode( access, name, desc, signature, exceptions ) );
+			this.next = next;
+		}
+
+		@Override
+		public void visitEnd()
+		{
+			super.visitEnd();
+			final MethodNode mn = ( MethodNode ) mv;
+//			System.out.println( getClass().getSimpleName() + ": transforming " + new Method( mn.name, mn.desc ) );
+			try
+			{
+				InstantiateTransform.transform( mn, type, version, source, debug, interfaceIndex++ ).accept( next );;
+			}
+			catch ( final Exception e )
+			{
+				e.printStackTrace();
+				throw new RuntimeException( e );
+			}
+		}
+	}
+}
