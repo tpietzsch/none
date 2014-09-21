@@ -13,9 +13,10 @@
 	<groupId>net.imglib2</groupId>
 	<artifactId>neon</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
+	<inceptionYear>2014</inceptionYear>
 
 	<name>neon</name>
-	<description>runtime code modification for imglib</description>
+	<description>runtime code modification for imglib2</description>
 
 	<dependencies>
 		<dependency>
@@ -63,18 +64,6 @@
 	</developers>
 
  	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5</version>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -84,6 +73,15 @@
 							<Premain-Class>neon.agent.Agent</Premain-Class>
 						</manifestEntries>
 					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<licenseName>bsd_2</licenseName>
+					<organizationName>Tobias Pietzsch.</organizationName>
+					<projectName>neon: runtime code modification for imglib2.</projectName>
 				</configuration>
 			</plugin>
 		</plugins>
