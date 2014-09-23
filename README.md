@@ -1,4 +1,4 @@
-![logo](logo.png)
+![logo](logo-small.png)
 
 **Neon** is a runtime Java code modification tool. It implements code transformations that enable JIT optimization for certain difficult-to-optimize constructs. It is primarily intented to increase performance of the [ImgLib2](http://github.com/imglib) image processing library.
 
