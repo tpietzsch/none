@@ -1,3 +1,5 @@
+![logo](logo.png)
+
 **Neon** is a runtime Java code modification tool. It implements code transformations that enable JIT optimization for certain difficult-to-optimize constructs. It is primarily intented to increase performance of the [ImgLib2](http://github.com/imglib) image processing library.
 
 **Neon** comprises a set of Java annotations and a Java agent that transforms annotated code. The transformation idioms are designed to be nonintrusive. *Importantly, annotated code will run with identical results, whether the Java agent is employed or not, making the use of Neon optional at runtime.*
