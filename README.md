@@ -17,7 +17,7 @@ This applies when
 * the actual runtime target of the polymorphic call is the same for all elements.
 
 ### Problem
-To illustrate the problem, consider the following example.
+To illustrate the problem, consider the following example. (See also [examples/Example1](src/main/java/examples/Example1.java)).
 
 ```java
 public class Example1 {
