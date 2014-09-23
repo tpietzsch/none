@@ -20,11 +20,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2</artifactId>
-		</dependency>
- 	<!--
-		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
 			<version>5.0.3</version>
@@ -39,12 +34,17 @@
 			<artifactId>asm-tree</artifactId>
 			<version>5.0.3</version>
 		</dependency>
-	-->
+ 	<!--
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-debug-all</artifactId>
 			<version>5.0.3</version>
 		</dependency>
+	-->
 	</dependencies>
 
 	<developers>
