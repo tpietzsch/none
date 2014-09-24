@@ -140,7 +140,7 @@ All cases are optimized by the JIT.
 
 ### Implementation
 What happened?
-The **neon** java agent replaces the annotated method `foreach()` by roughly the the bytecode of the following:
+The **neon** java agent replaces the annotated method `foreach()` by roughly the bytecode of the following:
 ```java
 static interface __neon__I0
 {
