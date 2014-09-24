@@ -70,7 +70,7 @@ Sum: 4ms
 Sum: 3ms
 ```
 
-After (actually during) the first run, the JIT detects that this is a hot loop and compiles it. Noting that the only `F` that was ever used in `foreach()` is `Sum`, the JIT optimistically inlines that, assuming that this is all it will ever occur.
+After (actually during) the first run, the JIT detects that this is a hot loop and compiles it. Noting that the only `F` that was ever used in `foreach()` is `Sum`, the JIT optimistically inlines that, assuming that this is all that will ever occur.
 
 However, if we add different `F`s, the JIT will revise its overly optimistic assumption,
 making `F.apply()` a polymorphic call.
