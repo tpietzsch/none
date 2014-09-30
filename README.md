@@ -2,7 +2,7 @@
 
 **None** is a runtime Java code modification tool. It implements code transformations that enable JIT optimization for certain difficult-to-optimize constructs.
 
-**None** comprises a set of Java annotations and a Java agent that transforms annotated code. The transformation idioms are designed to be nonintrusive. *Importantly, annotated code will run with identical results, whether the Java agent is employed or not, making the use of **None** optional at runtime.*
+**None** comprises a set of Java annotations and a Java agent that transforms annotated code. The transformation idioms are designed to be nonintrusive. *Importantly, annotated code will run with identical results, whether the Java agent is employed or not, making the use of __None__ optional at runtime.*
 
 Idioms
 ======
