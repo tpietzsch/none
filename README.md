@@ -184,9 +184,13 @@ So, when `Class<Sum>`, `Class<Max>`, and `Class<Average>` are first encountered,
 **@Instantiate @ByTypeOf** has been heavily influenced by [Cliff Click's blog post](http://www.azulsystems.com/blog/cliff/2011-04-04-fixing-the-inlining-problem) describing essentially the exact problem and [this reply by Remi Forax](https://weblogs.java.net/blog/forax/archive/2011/04/08/fixing-inlining-“problem”-prototype) which has a prototype for addressing a flavour of the problem related to lamda calls. Unfortunately I'm unfamiliar with the workings of `java.lang.invoke` so his code is a bit beyond me. But I understood enough to see that ASM plus JavaAgent might be a solution.
 
 In general for Java-performance related issues I found these blogs useful:
+
 [Mechanical Sympathy](http://mechanical-sympathy.blogspot.de)
+
 [Insightful Logic](http://www.insightfullogic.com/blog/)
+
 [Psychosomatic, Lobotomy, Saw](http://psy-lob-saw.blogspot.de)
+
 [Headius](http://blog.headius.com)
 
 For hunting down JIT-related performance problems I found the JVM flags
