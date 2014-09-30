@@ -1,6 +1,6 @@
 /*
  * #%L
- * neon: runtime code modification for imglib2.
+ * none: runtime code modification  by annotation idioms.
  * %%
  * Copyright (C) 2014 Tobias Pietzsch.
  * %%
@@ -26,7 +26,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package neon.annotation;
+package none.annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

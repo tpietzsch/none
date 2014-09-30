@@ -1,18 +1,18 @@
 /*
  * #%L
- * neon: runtime code modification for imglib2.
+ * none: runtime code modification  by annotation idioms.
  * %%
  * Copyright (C) 2014 Tobias Pietzsch.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -26,7 +26,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package neon.agent;
+package none.agent;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import neon.annotation.ByTypeOf;
-import neon.annotation.Instantiate;
+import none.annotation.ByTypeOf;
+import none.annotation.Instantiate;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -64,16 +64,16 @@ public class InstantiateTransform implements Opcodes
 		return InstantiateTransform.transformToInstantiatorMethod( mn, template );
 	}
 
-	static final String interfaceNameFormat = "%s$__neon__I%d";
+	static final String interfaceNameFormat = "%s$__none__I%d";
 
-	static final String impClassNameFormatFormat = "%s$__neon__I%dC%%d";
+	static final String impClassNameFormatFormat = "%s$__none__I%dC%%d";
 
 	/**
 	 * Create an interface containing one method of the same name, signature,
 	 * and return type as m.
 	 *
 	 * The interface is made an inner class of <em>className</em>, named "
-	 * <em>className</em>$__neon__I<em>interfaceIndex</em>".
+	 * <em>className</em>$__none__I<em>interfaceIndex</em>".
 	 *
 	 * @param m
 	 *            the method to be rewritten.
@@ -363,51 +363,51 @@ public class InstantiateTransform implements Opcodes
 		m.instructions.clear();
 		final GeneratorAdapter g = new GeneratorAdapter( m, m.access, m.name, m.desc );
 
-		final int __neon__P__localVariableIndex = g.newLocal( Type.getType( Object[].class ) );
-		final int __neon__O__localVariableIndex = g.newLocal( interfaceType );
+		final int __none__P__localVariableIndex = g.newLocal( Type.getType( Object[].class ) );
+		final int __none__O__localVariableIndex = g.newLocal( interfaceType );
 
 		final Label l0 = g.mark();
 
-		// this creates Object[] __neon__P which will contain parameters for switching implementation
+		// this creates Object[] __none__P which will contain parameters for switching implementation
 		g.push( numByTypeOfArguments );
 		g.newArray( Type.getType( Object.class ) );
-		g.storeLocal( __neon__P__localVariableIndex );
+		g.storeLocal( __none__P__localVariableIndex );
 		final Label l1 = g.mark();
 
-		// put the @ByTypeOf annotated parameters into Object[] __neon__P array
+		// put the @ByTypeOf annotated parameters into Object[] __none__P array
 		for ( int i = 0; i < numByTypeOfArguments; ++i )
 		{
-			g.loadLocal( __neon__P__localVariableIndex );
+			g.loadLocal( __none__P__localVariableIndex );
 			g.push( i );
 			g.loadArg( byTypeOfArguments[ i ] );
 			g.visitInsn( AASTORE );
 		}
 
-		// get a generated class instance appropriate for the concrete types in __neon__P
+		// get a generated class instance appropriate for the concrete types in __none__P
 		if ( isStatic )
 		{
-			// if m is a static method, invoke RuntimeBuilder.getInnerClassInstance(__neon__P);
+			// if m is a static method, invoke RuntimeBuilder.getInnerClassInstance(__none__P);
 			g.push( Type.getObjectType( interfaceName ) );
-			g.loadLocal( __neon__P__localVariableIndex );
+			g.loadLocal( __none__P__localVariableIndex );
 			g.invokeStatic( Type.getType( RuntimeBuilder.class ), new Method( "getInnerClassInstance", "(Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;" ) );
 		}
 		else
 		{
-			// if m is a non-static method, invoke RuntimeBuilder.getInnerClassInstance(this, __neon__P);
+			// if m is a non-static method, invoke RuntimeBuilder.getInnerClassInstance(this, __none__P);
 			g.loadThis();
 			g.push( Type.getObjectType( interfaceName ) );
-			g.loadLocal( __neon__P__localVariableIndex );
+			g.loadLocal( __none__P__localVariableIndex );
 			g.invokeStatic( Type.getType( RuntimeBuilder.class ), new Method( "getInnerClassInstance", "(Ljava/lang/Object;Ljava/lang/Class;[Ljava/lang/Object;)Ljava/lang/Object;" ) );
 		}
 
-		// cast to generated interface type and store in local variable __neon__O
+		// cast to generated interface type and store in local variable __none__O
 		g.checkCast( interfaceType );
-		g.storeLocal( __neon__O__localVariableIndex );
+		g.storeLocal( __none__O__localVariableIndex );
 		final Label l2 = g.mark();
 
-		// invoke __neon__O.<methodName>(...), which is basically a copy of the
+		// invoke __none__O.<methodName>(...), which is basically a copy of the
 		// code that was originally contained in m.
-		g.loadLocal( __neon__O__localVariableIndex );
+		g.loadLocal( __none__O__localVariableIndex );
 		g.loadArgs();
 		g.invokeInterface( interfaceType, interfaceMethod );
 		g.returnValue();
@@ -420,14 +420,14 @@ public class InstantiateTransform implements Opcodes
 		// for existing local variables, set begin and end to l0 and l3
 		final Iterator< LocalVariableNode > vi = m.localVariables.iterator();
 		m.localVariables = new ArrayList< LocalVariableNode >();
-		for ( int i = 0; i < __neon__P__localVariableIndex; ++i )
+		for ( int i = 0; i < __none__P__localVariableIndex; ++i )
 		{
 			final LocalVariableNode v = vi.next();
 			m.visitLocalVariable( v.name, v.desc, v.signature, l0, l3, i );
 		}
-		// create new local variables __neon__P and __neon__O
-		m.visitLocalVariable( "__neon__P", "[Ljava/lang/Object;", null, l1, l3, __neon__P__localVariableIndex );
-		m.visitLocalVariable( "__neon__O", Type.getObjectType( interfaceName ).getDescriptor(), null, l2, l3, __neon__O__localVariableIndex );
+		// create new local variables __none__P and __none__O
+		m.visitLocalVariable( "__none__P", "[Ljava/lang/Object;", null, l1, l3, __none__P__localVariableIndex );
+		m.visitLocalVariable( "__none__O", Type.getObjectType( interfaceName ).getDescriptor(), null, l2, l3, __none__O__localVariableIndex );
 
 		return m;
 	}

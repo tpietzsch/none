@@ -11,12 +11,12 @@
 	</parent>
 
 	<groupId>net.imglib2</groupId>
-	<artifactId>neon</artifactId>
+	<artifactId>none</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<inceptionYear>2014</inceptionYear>
 
-	<name>neon</name>
-	<description>runtime code modification for imglib2</description>
+	<name>none</name>
+	<description>runtime code modification by annotation idioms</description>
 
 	<dependencies>
 		<dependency>
@@ -70,7 +70,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Premain-Class>neon.agent.Agent</Premain-Class>
+							<Premain-Class>none.agent.Agent</Premain-Class>
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -81,7 +81,7 @@
 				<configuration>
 					<licenseName>bsd_2</licenseName>
 					<organizationName>Tobias Pietzsch.</organizationName>
-					<projectName>neon: runtime code modification for imglib2.</projectName>
+					<projectName>none: runtime code modification  by annotation idioms.</projectName>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -100,9 +100,9 @@
 	</repositories>
 
 	<scm>
-		<connection>scm:git:git://github.com/tpietzsch/neon</connection>
-		<developerConnection>scm:git:git@github.com:tpietzsch/neon</developerConnection>
+		<connection>scm:git:git://github.com/tpietzsch/none</connection>
+		<developerConnection>scm:git:git@github.com:tpietzsch/none</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/tpietzsch/neon</url>
+		<url>https://github.com/tpietzsch/none</url>
 	</scm>
 </project>

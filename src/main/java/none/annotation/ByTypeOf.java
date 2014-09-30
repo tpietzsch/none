@@ -1,6 +1,6 @@
 /*
  * #%L
- * neon: runtime code modification for imglib2.
+ * none: runtime code modification  by annotation idioms.
  * %%
  * Copyright (C) 2014 Tobias Pietzsch.
  * %%
@@ -26,29 +26,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package neon.agent;
+package none.annotation;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class ClassBytes
+@Retention( RetentionPolicy.CLASS )
+@Target( ElementType.PARAMETER )
+public @interface ByTypeOf
 {
-	public final String name;
-
-	public final byte[] bytes;
-
-	private Class< ? > loadedClass;
-
-	public ClassBytes( final String name, final byte[] bytes )
-	{
-		this.name = name;
-		this.bytes = bytes;
-		loadedClass = null;
-	}
-
-	public Class< ? > load() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
-	{
-		if ( loadedClass == null )
-			loadedClass = ClassLoaderUtil.loadClass( name, bytes );
-		return loadedClass;
-	}
 }
