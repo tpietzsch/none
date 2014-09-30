@@ -194,7 +194,9 @@ In general for Java-performance related issues I found these blogs useful:
 [Headius](http://blog.headius.com)
 
 For hunting down JIT-related performance problems I found the JVM flags
-`-XX:+PrintCompilation`
-`-XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining` (only useful starting from java 7)
-`-XX:+UnlockDiagnosticVMOptions -XX:+LogCompilation`
+```
+-XX:+PrintCompilation
+-XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining (only useful starting from java 7)
+-XX:+UnlockDiagnosticVMOptions -XX:+LogCompilation
+```
 extremely useful.
