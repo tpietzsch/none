@@ -1,8 +1,8 @@
 ![logo](logo-small.png)
 
-**Neon** is a runtime Java code modification tool. It implements code transformations that enable JIT optimization for certain difficult-to-optimize constructs. It is primarily intented to increase performance of the [ImgLib2](http://github.com/imglib) image processing library.
+**None** is a runtime Java code modification tool. It implements code transformations that enable JIT optimization for certain difficult-to-optimize constructs.
 
-**Neon** comprises a set of Java annotations and a Java agent that transforms annotated code. The transformation idioms are designed to be nonintrusive. *Importantly, annotated code will run with identical results, whether the Java agent is employed or not, making the use of Neon optional at runtime.*
+**None** comprises a set of Java annotations and a Java agent that transforms annotated code. The transformation idioms are designed to be nonintrusive. *Importantly, annotated code will run with identical results, whether the Java agent is employed or not, making the use of **None** optional at runtime.*
 
 Idioms
 ======
@@ -119,9 +119,9 @@ Using the idiom **@Instantiate @ByTypeOf**, this problem can be resolved. Add an
 }
 
 ```
-When running the program, use the *neon* Java agent to rewrite the annotated code by specifying
+When running the program, use the *none* Java agent to rewrite the annotated code by specifying
 ```
-java -javaagent:/path/to/neon-1.0.0-SNAPSHOT.jar ...
+java -javaagent:/path/to/none-1.0.0-SNAPSHOT.jar ...
 ```
 We obtain the following running times:
 ```
@@ -140,34 +140,34 @@ All cases are optimized by the JIT.
 
 ### Implementation
 What happened?
-The **neon** java agent replaces the annotated method `foreach()` by roughly the bytecode of the following:
+The **none** java agent replaces the annotated method `foreach()` by roughly the bytecode of the following:
 ```java
-static interface __neon__I0
+static interface __none__I0
 {
 	public void foreach( final F f );
 }
 
 public void foreach( final F f )
 {
-	final __neon__I0 i0 = ( __neon__I0 )
+	final __none__I0 i0 = ( __none__I0 )
 			RuntimeBuilder.getInnerClassInstance(
 					this,
-					__neon__I0.class,
+					__none__I0.class,
 					new Object[] { f } );
 	i0.foreach( f );
 }
 ```
-The `RuntimeBuilder.getInnerClassInstance()` returns an object implementing `__neon__I0.foreach()`. The last argument, `new Object[] { f }` is an object array containing all parameters annotated with `@ByTypeOf`, in this case `f`. Depending on the classes of these objects, new `__neon__I0` implementations are generated on the fly. These implementations are made using the original bytecode of the `@Instantiated` method, transformed to accomodate the fact that they lives in an inner class now. (Both `__neon__I0` and its implementations are inner classes of the class containing `@Instantiated` method).
+The `RuntimeBuilder.getInnerClassInstance()` returns an object implementing `__none__I0.foreach()`. The last argument, `new Object[] { f }` is an object array containing all parameters annotated with `@ByTypeOf`, in this case `f`. Depending on the classes of these objects, new `__none__I0` implementations are generated on the fly. These implementations are made using the original bytecode of the `@Instantiated` method, transformed to accomodate the fact that they lives in an inner class now. (Both `__none__I0` and its implementations are inner classes of the class containing `@Instantiated` method).
 
 Here is again a run of the above example, printing when new classes are generated:
 ```
-ClassLoaderUtil.loadClass( examples.Example1$__neon__I0 )
-InstantiateTransform.transformToInstantiatorMethod( foreach (Lexamples/Example1$F;)V --> examples/Example1$__neon__I0 )
-ClassLoaderUtil.loadClass( examples.Example1$__neon__I0C0 )
+ClassLoaderUtil.loadClass( examples.Example1$__none__I0 )
+InstantiateTransform.transformToInstantiatorMethod( foreach (Lexamples/Example1$F;)V --> examples/Example1$__none__I0 )
+ClassLoaderUtil.loadClass( examples.Example1$__none__I0C0 )
 Sum: 7ms
-ClassLoaderUtil.loadClass( examples.Example1$__neon__I0C1 )
+ClassLoaderUtil.loadClass( examples.Example1$__none__I0C1 )
 Max: 8ms
-ClassLoaderUtil.loadClass( examples.Example1$__neon__I0C2 )
+ClassLoaderUtil.loadClass( examples.Example1$__none__I0C2 )
 Average: 8ms
 Sum: 3ms
 Max: 4ms
@@ -176,4 +176,4 @@ Sum: 4ms
 Max: 4ms
 Average: 4ms
 ```
-So, when `Class<Sum>`, `Class<Max>`, and `Class<Average>` are first encountered, new inner classes `__neon__I0C0`, `__neon__I0C`, `__neon__I0C3` are made. On subsequent occurrences these classes are re-used.
+So, when `Class<Sum>`, `Class<Max>`, and `Class<Average>` are first encountered, new inner classes `__none__I0C0`, `__none__I0C`, `__none__I0C3` are made. On subsequent occurrences these classes are re-used.
