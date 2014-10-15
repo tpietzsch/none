@@ -58,7 +58,7 @@ public class Agent
 			{
 //				System.out.println( "Agent.premain(): transform " + className );
 
-				if ( loader == null || className == null || className.startsWith( "dynameta.agent" ) )
+				if ( loader == null || className == null || className.startsWith( "none.agent" ) )
 					return null;
 
 				try
