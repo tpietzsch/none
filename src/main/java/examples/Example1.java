@@ -57,8 +57,12 @@ public class Example1
 		void apply( int i );
 	}
 
+	public void foreach( final F f) {
+		foreach2(f);
+	}
+
 	@Instantiate
-	public void foreach( @ByTypeOf final F f )
+	public void foreach2( @ByTypeOf final F f )
 	{
 		for ( final int i : values )
 			f.apply( i );
