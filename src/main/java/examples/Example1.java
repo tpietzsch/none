@@ -30,9 +30,6 @@ package examples;
 
 import java.util.Random;
 
-import none.annotation.ByTypeOf;
-import none.annotation.Instantiate;
-
 /**
  * Example illustrating @Instantiate @ByTypeOf.
  * Try running it with {@code -javaagent:/path/to/none-1.0.0-SNAPSHOT.jar} and without.
@@ -52,16 +49,31 @@ public class Example1
 			values[ i ] = random.nextInt( Integer.MAX_VALUE );
 	}
 
-	static interface F
+	public void foreach(final F f)
 	{
-		void apply( int i );
+		LoopInterface loop = Loop.createKeySpecific(f.getClass());
+		loop.foreach(f, values);
 	}
 
-	@Instantiate
-	public void foreach( @ByTypeOf final F f )
-	{
-		for ( final int i : values )
-			f.apply( i );
+
+	public interface  LoopInterface {
+
+		void foreach(final F f, int[] values);
+	}
+
+	public static class Loop implements LoopInterface {
+
+		private static final ClassCopyProvider<LoopInterface> loopProvider =
+				new ClassCopyProvider<LoopInterface>(Loop.class);
+
+		public static LoopInterface createKeySpecific(Object key) {
+			return loopProvider.createKeySpecific(key);
+		}
+
+		public void foreach(final F f, int[] values) {
+			for ( final int i : values )
+				f.apply( i );
+		}
 	}
 
 	static class Sum implements F
@@ -143,4 +155,5 @@ public class Example1
 			System.out.println( "Average: " + t + "ms" );
 		}
 	}
+
 }
