@@ -28,13 +28,8 @@
  */
 package examples;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.io.IOUtils;
 /**
  * Example illustrating @Instantiate @ByTypeOf.
  * Try running it with {@code -javaagent:/path/to/none-1.0.0-SNAPSHOT.jar} and without.
@@ -56,35 +51,25 @@ public class Example1
 
 	public void foreach(final F f)
 	{
-		LoopInterface loop = loopProvider.create(f.getClass());
+		LoopInterface loop = Loop.createKeySpecific(f.getClass());
 		loop.foreach(f, values);
 	}
 
-	private LoopProvider loopProvider = new LoopProvider();
-
-	public static class LoopProvider {
-
-		private Map<Class<?>, Class<LoopInterface>> map = new HashMap<Class<?>, Class<LoopInterface>>();
-
-		LoopInterface create(Class<?> key) {
-			Class<LoopInterface> clazz = map.get(key);
-			if(clazz == null) {
-				clazz = new ClassCopyLoader().<LoopInterface>copyClass(Loop.class);
-				map.put(key, clazz);
-			}
-			try {
-				return clazz.getConstructor().newInstance();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
 
 	public interface  LoopInterface {
+
 		void foreach(final F f, int[] values);
 	}
 
 	public static class Loop implements LoopInterface {
+
+		private static final ClassCopyProvider<LoopInterface> loopProvider =
+				new ClassCopyProvider<LoopInterface>(Loop.class);
+
+		public static LoopInterface createKeySpecific(Object key) {
+			return loopProvider.createKeySpecific(key);
+		}
+
 		public void foreach(final F f, int[] values) {
 			for ( final int i : values )
 				f.apply( i );
@@ -171,29 +156,4 @@ public class Example1
 		}
 	}
 
-	public static class ClassCopyLoader extends ClassLoader {
-
-		public <T> Class<T> copyClass(Class<? extends T> aClass) {
-			byte[] bytes = classToBytes(aClass);
-			return (Class<T>) bytesToClass(aClass.getName(), bytes);
-		}
-
-		private byte[] classToBytes(Class<?> aClass) {
-			String className = aClass.getName();
-			String classAsPath = className.replace('.', '/') + ".class";
-			InputStream stream = aClass.getClassLoader().getResourceAsStream(classAsPath);
-			try {
-				return IOUtils.toByteArray(stream);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		private Class<?> bytesToClass(String className, byte[] bytes) {
-			Class<?> copiedClass = super.defineClass(className, bytes, 0, bytes.length);
-			super.resolveClass(copiedClass);
-			return copiedClass;
-		}
-
-	}
 }
